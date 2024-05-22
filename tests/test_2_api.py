@@ -17,6 +17,8 @@ def test_create():
     assert api.delete_user(res.json()['id']).status_code == HTTPStatus.NO_CONTENT  # 2й ответ res
 
 
+# Тесты написаны на старой версии jsonschema, падают в новых версиях (BaseModel Error)
+
 def test_list_users():
     res = api.list_users()
 
@@ -25,7 +27,6 @@ def test_list_users():
     assert res.headers['Cache-Control'] == 'max-age=14400'
 
 
-# Тесты написаны на старой версии jsonschema, падают в новых версиях
 def test_single_user_not_found():
     res = api.single_user_not_found()
 
