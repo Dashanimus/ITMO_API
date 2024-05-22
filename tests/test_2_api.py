@@ -4,6 +4,19 @@ from http import HTTPStatus
 import re
 
 
+def test_create():
+    name = 'Boris'
+    job = 'Tester'
+    res = api.create(name, job)
+
+    assert res.status_code == HTTPStatus.CREATED  # 1й ответ res
+    assert res.json()['name'] == name
+    assert res.json()['job'] == job
+    assert re.fullmatch(r'\d{1,4}', res.json()['id'])
+
+    assert api.delete_user(res.json()['id']).status_code == HTTPStatus.NO_CONTENT  # 2й ответ res
+
+
 def test_list_users():
     res = api.list_users()
 
@@ -12,6 +25,7 @@ def test_list_users():
     assert res.headers['Cache-Control'] == 'max-age=14400'
 
 
+# Тесты написаны на старой версии jsonschema, падают в новых версиях
 def test_single_user_not_found():
     res = api.single_user_not_found()
 
@@ -42,17 +56,3 @@ def test_single_user():
         }
     }
     assert example == res_body
-
-
-def test_create():
-    name = 'Boris'
-    job = 'Tester'
-    res = api.create(name, job)
-
-    assert res.status_code == HTTPStatus.CREATED  # 1й ответ res
-    assert res.json()['name'] == name
-    assert res.json()['job'] == job
-    assert re.fullmatch(r'\d{1,4}', res.json()['id'])
-
-    assert api.delete_user(res.json()['id']).status_code == HTTPStatus.NO_CONTENT  # 2й ответ res
-
